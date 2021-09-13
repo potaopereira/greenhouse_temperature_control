@@ -3,9 +3,9 @@ IMG=ros_custom_image
 CNT=ros_custom_cnt_$(WORKSPACE)
 
 # without privileged rqt, rqt_graph does not work
-run = \
+create = \
 docker \
-run \
+create \
 --name $(CNT) \
 --cap-add=SYS_PTRACE \
 --network=host \
@@ -55,7 +55,7 @@ stop: start
 
 create_container: $(IMG)
 	xhost +local:docker
-	$(call run, /usr/bin/zsh whoami)
+	$(call create, /usr/bin/zsh)
 
 stop_container:
 	docker container stop $(CNT)
@@ -70,7 +70,7 @@ rm_image:
 
 run: $(IMG)
 	xhost +local:docker
-	$(call run, /usr/bin/zsh)
+	$(call exec, /usr/bin/zsh)
 
 $(IMG):
 	docker image inspect $@ > /dev/null \
