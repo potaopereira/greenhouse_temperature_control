@@ -1,0 +1,109 @@
+FROM ubuntu:20.04
+
+# ensure apt-get works during build of Docker images
+ENV DEBIAN_FRONTEND=noninteractive
+
+# setup timezone
+RUN echo 'Etc/UTC' > /etc/timezone && \
+    ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+    apt-get update && \
+    apt-get install -q -y --no-install-recommends tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+# set locale
+# locale must supports UTF-8: something minimal like POSIX
+RUN apt update \
+    && apt install -y locales \
+    && locale-gen en_US en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+    && export LANG=en_US.UTF-8
+
+# enable the Universe repository with these instructions.
+RUN apt install -y software-properties-common \
+    && add-apt-repository universe
+
+# Now add the ROS 2 apt repository to your system. First authorize our GPG key with apt.
+RUN apt update && apt install -y curl gnupg lsb-release
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# Add the repository to your sources list.
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+# Install ROS 2 packages
+# Recommended: ROS, RViz, demos, tutorials.
+RUN apt update && apt install -y ros-galactic-desktop
+
+# Bare Bones: Communication libraries, message packages, command line tools. No GUI tools.
+RUN apt update && apt install -y ros-galactic-ros-base
+
+RUN apt-get install -y python3-rosdep && rosdep init && rosdep update
+
+# colcon to build workspace
+RUN apt install -y python3-colcon-common-extensions
+
+# git
+RUN apt install -y git
+
+# zsh
+RUN apt install -y zsh
+
+# download and install latest version of VSCode
+RUN curl -L https://go.microsoft.com/fwlink/?LinkID=760868 > /tmp/vscode.deb && \
+    dpkg -i /tmp/vscode.deb && \
+    rm /tmp/vscode.deb
+
+# gsl
+RUN apt install -y libgsl-dev
+
+# gdbserver to debug ros node
+RUN apt-get install -y gdb gdbserver
+
+# qt custom plot requirements
+RUN apt install -y qt5-default mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev
+
+# necessary arguments
+ARG user
+ARG group=${user}
+
+# add user for convenient working with host files
+RUN useradd -mUs /bin/bash ${user} && \
+    usermod -aG sudo ${user} && \
+    usermod -aG dialout ${user} && \
+    echo "${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+USER ${user}
+WORKDIR /home/${user}
+
+# install ohmyzsh settings
+RUN curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o install.sh \
+ && chmod a+x install.sh \
+ && ./install.sh \
+ && rm install.sh
+
+# install VSCode extensions
+RUN code --force --install-extension ms-vscode.cpptools
+RUN code --force --install-extension twxs.cmake
+RUN code --force --install-extension cschlosser.doxdocgen
+RUN code --force --install-extension ms-azuretools.vscode-docker
+RUN code --force --install-extension ms-python.python
+RUN code --force --install-extension ms-vscode-remote.remote-containers
+RUN code --force --install-extension austin.code-gnu-global
+RUN code --force --install-extension ms-vscode.cpptools-extension-pack
+
+# setup entrypoint
+COPY --chown=${user} ./ros_entrypoint.sh ./
+RUN chmod u+x ./ros_entrypoint.sh
+
+# set DISPLAY variable for X11 forwarding from container to host
+ENV DISPLAY=:0
+
+# fallback graphics rendering for Qt applications; otherwise empty window is displayed
+# possible values "raster"|"native"|"opengl"
+ENV QT_GRAPHICSSYSTEM="native"
+ENV QT_X11_NO_MITSHM=1
+
+ENV ROS_DISTRO galactic
+
+RUN mkdir workspace
+WORKDIR /home/${user}/workspace
+SHELL ["/usr/bin/zsh", ""]

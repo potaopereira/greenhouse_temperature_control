@@ -1,0 +1,10 @@
+float32 pgain
+float32 igain
+float32 imax
+float32 ierrormax
+float32 target
+int32 pwmperiod
+---
+bool accepted
+# if start request has failed, report why
+string msg

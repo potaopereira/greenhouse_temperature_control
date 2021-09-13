@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) simulator",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerServerAddress": "localhost:3000",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/install/greenhouse_simulator/lib/greenhouse_simulator/greenhouse_simulator",
+        }
+        ,
+        {
+            "name": "(gdb) window controller",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerServerAddress": "localhost:3000",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/install/window_controller/lib/window_controller/window_controller",
+        }
+        ,
+        {
+            "name": "(gdb) gui monitor",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerServerAddress": "localhost:3000",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/install/gui_monitor/lib/gui_monitor/gui_monitor",
+        }
+        
+    ]
+}
