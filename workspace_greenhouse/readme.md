@@ -1,7 +1,7 @@
 # Controlling the Temperature of a Greenhouse
 
-<!-- ![greenhouse model](images/greenhouse_temperature_control.png) -->
-<img src="images/greenhouse_temperature_control.png" width="400"/>
+![greenhouse model](images/greenhouse.png)
+
 
 In order to control the temperature of a greenhouse, we create four nodes:
 1. One node for the controller, which will be listening to the temperature sensors topics
@@ -30,3 +30,7 @@ When choosing a smaller pwm period, the window set of available positions is sma
 
 ## Without the simulator
 ![node graph with simulator](images/simulator.png)
+
+# Diagram sketch
+<!-- ![greenhouse model](images/greenhouse_temperature_control.png) -->
+<img src="images/greenhouse_temperature_control.png" width="400"/>
