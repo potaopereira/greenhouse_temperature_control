@@ -17,7 +17,7 @@ When you are finished
 
 # Controlling the Temperature of a Greenhouse
 
-![greenhouse model](images/greenhouse.png)
+![greenhouse model](workspace_greenhouse/images/greenhouse.png)
 
 
 In order to control the temperature of a greenhouse, we create four nodes:
@@ -30,24 +30,24 @@ Requirements:
 
 # Changing target temperature
 
-![changing the target temperature](images/target_position_changed.gif)
+![changing the target temperature](workspace_greenhouse/images/target_position_changed.gif)
 
 Notice how the window openness changes throughtout the day, since the heat exchange (due to the sun exposure and the temperature gradient) also changes throughout the day.
 
 # Changing the PWM period
 
-![changing the pwm period](images/change_pwm_period.gif)
+![changing the pwm period](workspace_greenhouse/images/change_pwm_period.gif)
 
 When choosing a smaller pwm period, the window set of available positions is smaller, and the command looks more "staircase-like". Controlling the temperature with a smalle PWM period is still possible nonetheless.
 
 # Node Graph
 
 ## Without the simulator
-![node graph without simulator](images/controller_and_sensors_diagram.png)
+![node graph without simulator](workspace_greenhouse/images/controller_and_sensors_diagram.png)
 
 ## Without the simulator
-![node graph with simulator](images/simulator.png)
+![node graph with simulator](workspace_greenhouse/images/simulator.png)
 
 # Diagram sketch
-<!-- ![greenhouse model](images/greenhouse_temperature_control.png) -->
-<img src="images/greenhouse_temperature_control.png" width="400"/>
+<!-- ![greenhouse model](workspace_greenhouse/images/greenhouse_temperature_control.png) -->
+<img src="workspace_greenhouse/images/greenhouse_temperature_control.png" width="400"/>
